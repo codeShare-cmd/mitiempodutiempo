@@ -10,6 +10,9 @@ export default ({ mode }) => {
 
   return defineConfig({
     base: process.env.VITE_BASE_PUBLIC_PATH,
+    VITE_APIWEATHER: process.env.VITE_APIWEATHER,
+    VITE_APIKEY: process.env.VITE_API,
+    VITE_RAPIDAPI_HOST: process.env.VITE_RAPIDAPI_HOST,
     plugins: [
       eslint({ cache: false }),
       stylelint(),

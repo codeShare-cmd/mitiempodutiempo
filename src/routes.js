@@ -1,9 +1,8 @@
-import Index from '@/pages/index.vue';
-import NotFound from '@/pages/not-found.vue';
+import Home from './pages/home.vue';
 
 export const routes = [
-  { path: '/', component: Index },
-  { path: '/:path(.*)', component: NotFound },
+  { path: '/', component: Home },
+/*   { path: '/:path(.*)', component:  }, */
 ];
 
 export default routes;
