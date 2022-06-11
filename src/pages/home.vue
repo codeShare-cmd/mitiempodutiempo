@@ -1,11 +1,13 @@
 <template>
-  <main class="contenedor">
+  <main class="overflow-auto contenedor">
     <header class="flex flex-row justify-between">
       <h2 class="p-5 py-10 text-5xl font-semibold">
         {{ data?.region !== '' ? data.region : 'Obteniendo la posicion' }}
       </h2>
       <div>
-        cambiar region
+        <button @click="cambairRegion">
+          cambiar region
+        </button>
       </div>
     </header>
     <div
@@ -20,7 +22,18 @@
           {{ data?.statusSky }}
         </span>
       </div>
-      <Pronostico :region="data.region" />
+      <Pronostico
+        :region="data.region"
+        ::key="data.region"
+        class="mt-10"
+      />
+      <HistorialTiempo
+        :region="data.region"
+        class="mt-10"
+      />
+      <SalidaPuestaSol
+        :region="data.region"
+      />
     </div>
   </main>
 </template>
@@ -28,14 +41,18 @@
 <script>
 import { reactive, computed, onMounted } from 'vue';
 import Pronostico from '@/components/pronostico.vue';
+import HistorialTiempo from '@/components/HistorialTiempo.vue';
 import {
   getCurrentPosition, getTimeZone, getIp, getTimeZoneByIp, getRealTimeZone,
 } from '@/services/useGetCurrentLoaction.js';
+import SalidaPuestaSol from '@/components/salidaPuestaSol.vue';
 
 export default {
   name: 'Home',
   components: {
     Pronostico,
+    HistorialTiempo,
+    SalidaPuestaSol,
   },
   setup() {
     const data = reactive({
@@ -95,8 +112,22 @@ export default {
             });
         });
     });
+    const cambairRegion = () => {
+      if (data.region === 'Madrid') {
+        data.region = 'Norway';
+      } else {
+        data.region = 'Madrid';
+      }
+      getRealTimeZone(data.region)
+        .then((res) => res.json())
+        .then((res) => {
+          data.temp = res.current.temp_c;
+          data.day = res.current.is_day === 0;
+          data.statusSky = res.current.condition.text;
+        });
+    };
     const backgroundcolor = computed(() => (data.day === false ? '#0ba8bd' : 'black'));
-    return { data, backgroundcolor };
+    return { data, backgroundcolor, cambairRegion };
   },
 
 };

@@ -1,35 +1,43 @@
 <template>
-  <header>
-    <h2>Pronostico cada horas</h2>
-  </header>
-  <div>
-    <h2>{{ region }}</h2>
-    <ul>
-      <li
-        v-for="item in data.historial.horas"
-        :key="item.time"
-      >
-        {{ item.temp_c }}
-      </li>
-    </ul>
-  </div>
+  <section class="p-4 bg-blue-300/90 rounded-xl border">
+    <header class="my-2">
+      <h2 class="text-slate-200/75 uppercase">
+        Pronostico cada horas
+      </h2>
+    </header>
+    <ListTemp :data="data.historial" />
+  </section>
 </template>
 
 <script>
-import { reactive, onMounted } from 'vue';
+import {
+  reactive, onMounted, computed, watch,
+} from 'vue';
 import { useGetHistoryWeather } from '@/hooks/useGetHistoryWarther';
+import ListTemp from '@/components/listTemp.vue';
 
 export default {
   name: 'Pronostico',
+  components: {
+    ListTemp,
+  },
   props: {
     region: {
       type: String,
-      default: () => 'Madrid',
+      required: true,
     },
   },
   setup(props) {
     const data = reactive({
-      historial: '',
+      historial: {},
+      now: '',
+    });
+    const region2 = computed(() => props.region);
+    watch(region2, (currenvalue) => {
+      useGetHistoryWeather(currenvalue)
+        .then((resp) => {
+          data.historial = resp;
+        });
     });
     onMounted(() => {
       useGetHistoryWeather(props.region)
@@ -38,7 +46,7 @@ export default {
         });
     });
 
-    return { data };
+    return { data, region2 };
   },
 };
 </script>

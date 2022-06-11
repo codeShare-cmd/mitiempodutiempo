@@ -98,3 +98,15 @@ export async function getForecast(q, days, date) {
   const url = `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${q}&days=${days}&dt=${date}`;
   return fetch(url, options);
 }
+
+export async function getSalidaPuestaSol(region) {
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Host': 'weatherapi-com.p.rapidapi.com',
+      'X-RapidAPI-Key': 'e1db17a140msh75eea474640330ep1b8e8fjsnf12e1b06a2f6',
+    },
+  };
+  const url = `https://weatherapi-com.p.rapidapi.com/astronomy.json?q=${region}`;
+  return fetch(url, options);
+}
